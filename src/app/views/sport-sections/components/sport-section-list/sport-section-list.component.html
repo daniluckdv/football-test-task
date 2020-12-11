@@ -1,0 +1,18 @@
+<div class="sections-card-wrapper">
+  <mat-card
+    *ngFor="let section of sections"
+    [routerLink]="section.strSport"
+  >
+    <img
+      mat-card-image
+      alt="Photo of a Shiba Inu"
+      [src]="section.strSportThumb"
+    />
+    <mat-card-actions>
+      <button mat-button>
+        <img [src]="section.icon" />
+        <span>{{ section.strSport }}</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,12 @@
+.router-outlet-wrapper {
+  padding: 15px;
+}
+
+mat-toolbar-row {
+  .menu_link {
+    display: flex;
+    align-items: center ;
+    color: #ffffff;
+    text-decoration: none;
+  }
+}

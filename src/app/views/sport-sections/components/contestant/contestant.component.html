@@ -1,0 +1,30 @@
+<ng-container *ngIf="team">
+  <div class="main-card-background team-details">
+    <h2>{{ team.strTeam }}</h2>
+    <img width="200" [src]="team.strTeamBadge" />
+    <p>
+      <a [routerLink]="'/competition/' + team.idLeague">{{ team.strLeague }}</a>
+    </p>
+    <p>{{ team.strStadiumLocation }}</p>
+    <p>{{ team.strStadium }}</p>
+    <p>{{ team.intStadiumCapacity }}</p>
+    <p>{{ team.intFormedYear }}</p>
+  </div>
+  <div style="width: 100%">
+    <div class="main-card-background last_games">
+      <h2>Last 5 Games</h2>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let game of games">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ game.strEvent }}</mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div class="main-card-background team-description">
+      <h2>Description</h2>
+      <p>{{ team.strDescriptionEN }}</p>
+      <p>{{ team.strStadiumDescription }}</p>
+    </div>
+  </div>
+</ng-container>

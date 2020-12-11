@@ -1,0 +1,52 @@
+:host {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  div:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  .competition-description {
+    max-width: 300px;
+    width: 100%;
+    text-align: center;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    img {
+      width: 100%;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .teams-section,
+  .competition-information {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+  }
+
+  .teams-section {
+    table {
+      width: 100%;
+    }
+  }
+
+  .value-with-image {
+    display: flex;
+    align-items: center;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}

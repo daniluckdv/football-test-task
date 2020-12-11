@@ -1,1 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+app-root {
+  height: 100%;
+  display: block;
+}
+
+.main-router-outlet-wrapper {
+  height: 100%;
+  background-color: #dbd8f0;
+  overflow: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.main-card-background {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+
+  h2 {
+    margin: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      padding-left: 10px;
+      color: #561eb5;
+    }
+  }
+}
