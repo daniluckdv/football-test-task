@@ -1,12 +1,32 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <a routerLink="/" routerLinkActive="menu_link-active" class="menu_link">
+    <a
+      (click)="redirectToHome()"
+      routerLinkActive="menu_link-active"
+      class="menu_link"
+    >
       <mat-icon>home</mat-icon>
       <span>Sport Portal</span>
     </a>
+
+    <ng-container *ngIf="navigation | async as nav">
+      <a class="menu_link">
+        <mat-icon>event</mat-icon>
+        <span> Event</span>
+      </a>
+      <a class="menu_link" [class.disabled]="nav.sport.title === 'Sport'">
+        <img width="15" [src]="nav.sport.icon" />
+        <span>{{ nav.sport.title }}</span>
+      </a>
+      <a class="menu_link" [class.disabled]="nav.country.title === 'Country'">
+        <span>{{ nav.country.title }}</span>
+      </a>
+    </ng-container>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <div class="router-outlet-wrapper">
   <router-outlet></router-outlet>
 </div>
+
+<ngx-spinner></ngx-spinner>

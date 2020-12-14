@@ -18,6 +18,22 @@
           <mat-expansion-panel-header>
             <mat-panel-title>{{ game.strEvent }}</mat-panel-title>
           </mat-expansion-panel-header>
+          <div>
+            <span>
+              <a [routerLink]="'/contestant/' + game.idHomeTeam">
+                <b>{{ game.strHomeTeam }}</b>
+              </a>
+              {{ game.intHomeScore }}
+            </span>
+            -
+            <span>
+              {{ game.intAwayScore }}
+              <a [routerLink]="'/contestant/' + game.idAwayTeam">
+                <b>{{ game.strAwayTeam }}</b>
+              </a>
+            </span>
+            <br />
+          </div>
         </mat-expansion-panel>
       </mat-accordion>
     </div>

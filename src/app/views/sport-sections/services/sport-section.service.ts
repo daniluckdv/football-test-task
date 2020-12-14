@@ -4,18 +4,17 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
+import { iconPath } from '../constants/image-path.constant';
 import { SportSection } from '../interfaces/sport-section.interface';
-
-const iconPath = 'https://www.thesportsdb.com/images/icons/';
+import { MenuService } from './menu.service';
 
 @Injectable()
 export class SportSectionService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private menu: MenuService) {}
 
   getSportSections(): Observable<SportSection[]> {
     const url = environment.apiUrl + '/all_sports.php';
     return this.http.get<{ sports: SportSection[] }>(url).pipe(
-      tap((output) => console.log(output)),
       map((output) => {
         const sections = output.sports.map((section) => {
           const icon = iconPath + section.strSport + '.png';
@@ -33,6 +32,12 @@ export class SportSectionService {
     const url = environment.apiUrl + '/search_all_leagues.php';
     return this.http
       .get<{ countrys: any[] }>(url, { params })
-      .pipe(map((output) => output.countrys));
+      .pipe(
+        map((output) => output.countrys),
+        tap(() => {
+          const icon = iconPath + sportName + '.png';
+          this.menu.sport$.next({ title: sportName, icon });
+        })
+      );
   }
 }

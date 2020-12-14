@@ -1,16 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
+import { Game } from '../interfaces/game.interface';
 import { LeagueDetails } from '../interfaces/league.interface';
 import { Team } from '../interfaces/team.interface';
-import { Game } from '../interfaces/game.interface';
+import { MenuService } from './menu.service';
+import { iconPath } from '../constants/image-path.constant';
 
 @Injectable()
 export class CompetitionService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private menuService: MenuService) {}
 
   getTeams(strSport: string, strCountry: string): Observable<Team[]> {
     const url = environment.apiUrl + '/search_all_teams.php';
@@ -21,7 +23,7 @@ export class CompetitionService {
 
     return this.http
       .get<{ teams: Team[] }>(url, { params })
-      .pipe(map((output) => output.teams));
+      .pipe(map((output) => output.teams || []));
   }
 
   getEvents(id: string): Observable<Game[]> {
@@ -30,7 +32,7 @@ export class CompetitionService {
 
     return this.http
       .get<{ events: Game[] }>(url, { params })
-      .pipe(map((output) => output.events));
+      .pipe(map((output) => output.events || []));
   }
 
   getSeasons(id: string): Observable<any[]> {
@@ -39,7 +41,7 @@ export class CompetitionService {
 
     return this.http
       .get<{ seasons: any[] }>(url, { params })
-      .pipe(map((output) => output.seasons));
+      .pipe(map((output) => output.seasons || []));
   }
 
   getLeague(id: string): Observable<LeagueDetails> {
@@ -48,7 +50,21 @@ export class CompetitionService {
 
     return this.http
       .get<{ leagues: LeagueDetails[] }>(url, { params })
-      .pipe(map((output) => output.leagues[0]));
+      .pipe(
+        map((output) => output.leagues[0]),
+        tap((res) => {
+          const icon = iconPath + res.strSport + '.png';
+          this.menuService.sport$.next({
+            title: res.strSport,
+            icon,
+          });
+
+          this.menuService.country$.next({
+            title: res.strCountry,
+            icon: null,
+          });
+        })
+      );
   }
 
   private getParams(id: string): HttpParams {

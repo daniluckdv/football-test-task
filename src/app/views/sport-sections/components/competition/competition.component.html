@@ -19,18 +19,31 @@
   <div class="main-card-background competition-information">
     <mat-tab-group mat-align-tabs="start">
       <mat-tab label="Last 15 events">
-        <mat-accordion>
-          <mat-expansion-panel *ngFor="let event of events">
-            <mat-expansion-panel-header>
-              <mat-panel-title>{{ event.strEvent }}</mat-panel-title>
-            </mat-expansion-panel-header>
-            <div>
+        <ng-container *ngIf="events.length; else empty">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let event of events">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ event.strEvent }}</mat-panel-title>
+              </mat-expansion-panel-header>
               <div>
-                <img [src]="" />
+                <span>
+                  <a [routerLink]="'/contestant/' + event.idHomeTeam">
+                    <b>{{ event.strHomeTeam }}</b>
+                  </a>
+                  {{ event.intHomeScore }}
+                </span>
+                -
+                <span>
+                  {{ event.intAwayScore }}
+                  <a [routerLink]="'/contestant/' + event.idAwayTeam">
+                    <b>{{ event.strAwayTeam }}</b>
+                  </a>
+                </span>
+                <br />
               </div>
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </ng-container>
       </mat-tab>
       <mat-tab label="Description">
         <p>
@@ -38,15 +51,28 @@
         </p>
       </mat-tab>
       <mat-tab label="Seasons">
-        <p *ngFor="let season of seasons">
-          {{ season.strSeason }}
-        </p>
+        <ng-container *ngIf="seasons.length; else empty">
+          <p *ngFor="let season of seasons">
+            {{ season.strSeason }}
+          </p>
+        </ng-container>
       </mat-tab>
     </mat-tab-group>
   </div>
 
   <div class="main-card-background teams-section">
     <h2>Teams</h2>
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <mat-label>Filter</mat-label>
+        <input
+          type="text"
+          matInput
+          (keyup)="searchTeams($event.target.value)"
+        />
+      </mat-form-field>
+    </form>
+
     <table mat-table [dataSource]="teams">
       <ng-container matColumnDef="strTeam">
         <th mat-header-cell *matHeaderCellDef>Team</th>
@@ -77,3 +103,7 @@
     </table>
   </div>
 </ng-container>
+
+<ng-template #empty>
+  <p>There are no data</p>
+</ng-template>

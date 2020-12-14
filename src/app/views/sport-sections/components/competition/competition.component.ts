@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Game } from '../../interfaces/game.interface';
 import { LeagueDetails } from '../../interfaces/league.interface';
@@ -11,8 +13,10 @@ import { CompetitionService } from '../../services/competition.service';
   templateUrl: './competition.component.html',
   styleUrls: ['./competition.component.scss'],
 })
-export class CompetitionComponent implements OnInit {
+export class CompetitionComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject();
   private id: string;
+  private fullTeamList = [];
 
   cols = ['strTeam', 'strStadium', 'intStadiumCapacity'];
   league: LeagueDetails;
@@ -33,29 +37,52 @@ export class CompetitionComponent implements OnInit {
     this.getSeasons();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  searchTeams(searchedTeam: string) {
+    if (!searchedTeam.length) {
+      this.teams = this.fullTeamList;
+      return;
+    }
+
+    this.teams = this.teams.filter((team) =>
+      team.strTeam.toLowerCase().includes(searchedTeam.toLowerCase())
+    );
+  }
+
   private getEvents() {
-    this.competitionService.getEvents(this.id).subscribe((events) => {
-      this.events = events;
-    });
+    this.competitionService
+      .getEvents(this.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((events) => (this.events = events));
   }
 
   private getSeasons() {
-    this.competitionService.getSeasons(this.id).subscribe((seasons) => {
-      this.seasons = seasons;
-    });
+    this.competitionService
+      .getSeasons(this.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((seasons) => (this.seasons = seasons));
   }
 
   private getLeague() {
-    this.competitionService.getLeague(this.id).subscribe((league) => {
-      this.league = league;
-      this.getTeams(league.strSport, league.strCountry);
-    });
+    this.competitionService
+      .getLeague(this.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((league) => {
+        this.league = league;
+        this.getTeams(league.strSport, league.strCountry);
+      });
   }
 
   private getTeams(strSport: string, strCountry: string) {
     this.competitionService
       .getTeams(strSport, strCountry)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((teams) => {
+        this.fullTeamList = teams;
         this.teams = teams;
       });
   }

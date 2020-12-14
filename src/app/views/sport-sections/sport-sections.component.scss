@@ -5,8 +5,19 @@
 mat-toolbar-row {
   .menu_link {
     display: flex;
-    align-items: center ;
+    align-items: center;
     color: #ffffff;
     text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:not(:last-child) {
+      margin-right: 25px;
+    }
+
+    &.disabled {
+      color: #000000;
+      cursor: not-allowed;
+    }
   }
 }
